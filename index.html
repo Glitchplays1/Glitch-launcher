@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GLITCH / CATCH Launcher — Android APK</title>
+  <style>
+    :root {
+      --bg: #050505;
+      --cyan: #00e5ff;
+      --green: #7cff3a;
+      --yellow: #ffe14a;
+      --pink: #ff2ea6;
+      --white: #f4f4f4;
+      --purple: #b14bff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: #000;
+      color: #ececec;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      overflow-x: hidden;
+    }
+
+    .scanlines {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          rgba(255,255,255,0.035) 0px,
+          rgba(255,255,255,0.035) 1px,
+          transparent 2px,
+          transparent 4px
+        );
+      z-index: 50;
+      mix-blend-mode: overlay;
+    }
+
+    .noise {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      opacity: 0.07;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      z-index: 40;
+    }
+
+    header {
+      position: relative;
+      z-index: 2;
+      padding: 28px 20px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      letter-spacing: 0.28em;
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .brand img {
+      width: 54px;
+      height: 54px;
+      border-radius: 12px;
+    }
+
+    .time-chip {
+      font-variant-numeric: tabular-nums;
+      color: #bbb;
+      font-size: 13px;
+    }
+
+    main {
+      position: relative;
+      z-index: 2;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 10px 20px 80px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 40px;
+      align-items: center;
+      padding: 30px 0 50px;
+    }
+
+    h1 {
+      font-size: clamp(42px, 8vw, 86px);
+      line-height: 0.9;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+    }
+
+    .glitch-word {
+      display: inline-block;
+      position: relative;
+    }
+
+    .c { color: var(--cyan); text-shadow: 0 0 18px rgba(0,229,255,.45); }
+    .a { color: var(--green); text-shadow: 0 0 18px rgba(124,255,58,.35); }
+    .x { color: var(--yellow); text-shadow: 0 0 18px rgba(255,225,74,.35); }
+    .t { color: var(--pink); text-shadow: 0 0 18px rgba(255,46,166,.4); }
+    .c2 { color: var(--white); text-shadow: 0 0 18px rgba(255,255,255,.25); }
+    .h { color: var(--purple); text-shadow: 0 0 18px rgba(177,75,255,.45); }
+
+    .sub {
+      margin-top: 18px;
+      max-width: 520px;
+      color: #bdbdbd;
+      font-size: 16px;
+      line-height: 1.55;
+    }
+
+    .actions {
+      margin-top: 28px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .btn {
+      border: 0;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 22px;
+      border-radius: 999px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      font-size: 14px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(90deg, var(--cyan), var(--green), var(--yellow), var(--pink), var(--purple));
+      color: #111;
+      box-shadow: 0 0 24px rgba(0,229,255,.25);
+    }
+
+    .btn-ghost {
+      background: #141414;
+      color: #fff;
+      border: 1px solid #333;
+    }
+
+    .phones {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .phones figure {
+      background: #0a0a0a;
+      border: 1px solid #222;
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0,0,0,.45);
+    }
+
+    .phones img {
+      width: 100%;
+      display: block;
+    }
+
+    .phones figcaption {
+      padding: 10px 12px 12px;
+      font-size: 12px;
+      color: #999;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    section {
+      margin-top: 20px;
+      background: #0c0c0c;
+      border: 1px solid #1d1d1d;
+      border-radius: 20px;
+      padding: 24px;
+    }
+
+    h2 {
+      font-size: 20px;
+      margin-bottom: 12px;
+    }
+
+    ol, ul {
+      padding-left: 20px;
+      color: #cfcfcf;
+      line-height: 1.7;
+    }
+
+    .warn {
+      margin-top: 16px;
+      padding: 14px 16px;
+      border-left: 3px solid var(--yellow);
+      background: #161200;
+      color: #f3e7a8;
+      font-size: 14px;
+    }
+
+    footer {
+      position: relative;
+      z-index: 2;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 10px 20px 40px;
+      color: #777;
+      font-size: 12px;
+    }
+
+    @media (max-width: 860px) {
+      .hero { grid-template-columns: 1fr; }
+      .phones { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="scanlines"></div>
+  <div class="noise"></div>
+
+  <header>
+    <div class="brand">
+      <img src="glitch-logo.png" alt="GLITCH / CATCH logo" />
+      <span>GLITCH LAUNCHER</span>
+    </div>
+    <div class="time-chip">ANDROID HOME APP</div>
+  </header>
+
+  <main>
+    <div class="hero">
+      <div>
+        <h1>
+          <span class="glitch-word c">C</span><span class="glitch-word a">A</span><span class="glitch-word x">T</span><span class="glitch-word t">C</span><span class="glitch-word c2">H</span>
+        </h1>
+        <p class="sub">
+          Neon glitch home screen for Android. Install the APK, then set
+          <strong>Glitch Launcher</strong> as your default Home app so the lock
+          and home layouts from the previews become your phone’s start screen.
+        </p>
+        <div class="actions">
+          <a class="btn btn-primary" href="GlitchLauncher.apk" download>Download APK</a>
+          <a class="btn btn-ghost" href="#install">Install &amp; set as home</a>
+        </div>
+        <p class="warn">
+          Put your real <code>GlitchLauncher.apk</code> in this same folder as
+          <code>index.html</code>. The button looks for that filename.
+          Only install APKs you built or trust. Unknown APKs can harm a phone.
+        </p>
+      </div>
+
+      <div class="phones">
+        <figure>
+          <img src="lock-preview.jpg" alt="Glitch lock screen preview" />
+          <figcaption>Lock screen</figcaption>
+        </figure>
+        <figure>
+          <img src="home-preview.jpg" alt="Glitch home screen preview" />
+          <figcaption>Home screen</figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <section id="install">
+      <h2>1. Install the APK</h2>
+      <ol>
+        <li>On your phone, open this page and tap <strong>Download APK</strong>.</li>
+        <li>If Android blocks it, open <em>Settings → Security</em> (or the download banner) and allow installs from this browser.</li>
+        <li>Open the downloaded file and tap <strong>Install</strong>.</li>
+        <li>When it finishes, tap <strong>Open</strong>.</li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>2. Change the home launcher</h2>
+      <p style="margin-bottom:12px;color:#cfcfcf;">This is the step that actually replaces your current home screen.</p>
+      <ol>
+        <li>Open <strong>Settings</strong>.</li>
+        <li>Search for <strong>Default apps</strong> (fastest on every brand).</li>
+        <li>Tap <strong>Home app</strong> / <strong>Launcher</strong>.</li>
+        <li>Choose <strong>Glitch Launcher</strong>.</li>
+        <li>Press the Home button or swipe up from the bottom. The new CATCH layout should appear.</li>
+      </ol>
+      <p style="margin-top:14px;color:#aaa;">Brand shortcuts:</p>
+      <ul>
+        <li><strong>Pixel / stock Android:</strong> Settings → Apps → Default apps → Home app</li>
+        <li><strong>Samsung:</strong> Settings → Apps → Choose default apps → Home app</li>
+        <li><strong>Xiaomi / Redmi / Poco:</strong> Settings → Home screen → Default launcher</li>
+        <li><strong>Oppo / OnePlus / Realme:</strong> Settings → Apps → Default app → Home app</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>3. Go back to the old home screen</h2>
+      <ol>
+        <li>Return to <strong>Default apps → Home app</strong>.</li>
+        <li>Pick your phone’s original launcher (One UI Home, Pixel Launcher, etc.).</li>
+        <li>Do this <em>before</em> uninstalling Glitch Launcher so you are not left without a home screen.</li>
+      </ol>
+    </section>
+  </main>
+
+  <footer>
+    Fan-style download page matching the CATCH / GLITCH mockups. Not an official Google Play listing.
+    Keep Unknown sources off after you install.
+  </footer>
+</body>
+</html>
